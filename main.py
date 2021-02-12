@@ -22,7 +22,7 @@ def translate(update: Update, context: CallbackContext) -> None:
     if has_cyrillic(update.message.text):
         try:
             eng_message = translator.translate(update.message.text, dest="en").text
-            update.message.reply_text(f"Would you please speak in English?\n\n{eng_message}")
+            update.message.reply_text(eng_message)
         except Exception as e:
             logger.error(f"Exception during translate: {e}")
 
