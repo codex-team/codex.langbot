@@ -18,16 +18,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def is_photo(len):
-    if len != 0:
-        return True
-    else:
-        return False
-
-
 def translate(update: Update, context: CallbackContext) -> None:
-    is_ph = is_photo(len(update.message.photo))
-    if is_ph:
+    if len(update.message.photo) != 0:
         is_cyr = has_cyrillic(str(update.message.caption))
         mes = update.message.caption
     else:
