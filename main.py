@@ -18,11 +18,20 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def is_photo(len):
+    return bool(len)
+
 def translate(update: Update, context: CallbackContext) -> None:
-    if has_cyrillic(update.message.text):
+    if is_photo(len(update.message.photo)):
+        is_cyr = has_cyrillic(str(update.message.caption))
+        mes = update.message.caption
+    else:
+        is_cyr = has_cyrillic(update.message.text)
+        mes = update.message.text
+    if is_cyr:
         try:
-            eng_message = translator.translate(update.message.text, dest="en").text
-            update.message.reply_text(eng_message)
+            eng_message = translator.translate(mes, dest="en").text
+            update.message.reply_text(eng_message, quote=True)
         except Exception as e:
             logger.error(f"Exception during translate: {e}")
 
@@ -30,8 +39,7 @@ def translate(update: Update, context: CallbackContext) -> None:
 def main():
     updater = Updater(os.environ.get('TOKEN'))
     dispatcher = updater.dispatcher
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, translate))
-
+    dispatcher.add_handler(MessageHandler((Filters.text | Filters.photo) & ~Filters.command, translate))
     updater.start_polling()
     updater.idle()
 
