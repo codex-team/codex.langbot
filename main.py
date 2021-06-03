@@ -40,7 +40,7 @@ def translate(update: Update, context: CallbackContext) -> None:
         is_cyr = has_cyrillic(str(update.message.caption))
         mes = update.message.caption
     else:
-        # Text in caption, because message without photo
+        # Take text from message itself
         is_cyr = has_cyrillic(update.message.text)
         mes = update.message.text
     if is_cyr:
