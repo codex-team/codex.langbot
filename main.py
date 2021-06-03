@@ -36,7 +36,7 @@ def translate(update: Update, context: CallbackContext) -> None:
     Translating message in telegram's chat with the Cyrillic
     """
     if is_photo(len(update.message.photo)):
-        # Text in caption, because message with photo
+        # Take text from photo caption
         is_cyr = has_cyrillic(str(update.message.caption))
         mes = update.message.caption
     else:
