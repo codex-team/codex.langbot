@@ -1,24 +1,23 @@
-name: Docker Image CI
+name: Build and push docker image
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 env:
-  DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/codexlangbot
+  DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/codex-langbot
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Build and push docker image
-      uses: docker/build-push-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        repository: ${{ env.DOCKER_REPO }}
-        tag_with_ref: true
+      - name: Build and push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ env.DOCKER_REPO }}
+          tag_with_ref: true
+          push: ${{ endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod') }}
